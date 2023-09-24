@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 from main import get_recommendations_with_details
+
 # Load the CSV dataset
-@st.cache_data   # Caching for faster reloading
+@st.cache_data    # Caching for faster reloading
 def load_data():
     data = pd.read_csv('amazon.csv')
     return data
@@ -18,7 +19,7 @@ def main():
     # Filter products by category
     selected_category = st.selectbox('Select a category:', data['category'].unique())
     filtered_data = data[data['category'] == selected_category]
-    #product_filters(filtered_data)
+
     st.title("Product Recommendations App")
 
     # Create an input field for the user to enter the product ID
@@ -31,40 +32,28 @@ def main():
 
         # Display recommendations in the Streamlit app
         st.header("Recommendations")
-        for i, rec in enumerate(recommendations, start=1):
-            st.subheader(f"Recommendation {i}")
-            st.write(f"Product ID: {rec['product_id']}")
-            st.write(f"Product Name: {rec['product_name']}")
-            st.write(f"Category: {rec['category']}")
-            st.write(f"Rating: {rec['rating']}")
-            st.write(f"Rating Count: {rec['rating_count']}")
-            st.write(f"Image Link: {rec['img_link']}")
-            st.write(f"Product Link: {rec['product_link']}")
-            st.write(f"Distance: {rec['distance']}")
+        num_columns = 3  # Number of columns in the grid layout
+        num_recommendations = len(recommendations)
+        num_rows = (num_recommendations - 1) // num_columns + 1
 
-def product_filters(filtered_data):
-    st.title('Products Display')
-    # Display products in a grid layout
-    num_columns = 3  # Number of columns in the grid
-    num_products = len(filtered_data)
-    num_rows = (num_products - 1) // num_columns + 1
+        columns = st.columns(num_columns)
 
-    columns = st.columns(num_columns)
+        recommendation_index = 0
+        for row in range(num_rows):
+            for col in range(num_columns):
+                if recommendation_index >= num_recommendations:
+                    break
 
-    product_index = 0
-    for row in range(num_rows):
-        for col in range(num_columns):
-            if product_index >= num_products:
-                break
-
-            with columns[col]:
-                product = filtered_data.iloc[product_index]
-                st.write(f"**Product Name:** {product['product_name']}")
-                #st.write(f"**Category:** {product['category']}")
-                st.write(f"**Rating:** {product['rating']}({product['rating_count']})")
-                st.image(product['img_link'], use_column_width=True)
-                st.write(f"**Product Link:** [Link]({product['product_link']})")
-                product_index += 1
+                with columns[col]:
+                    recommendation = recommendations[recommendation_index]
+                    st.subheader(f"Recommendation {recommendation_index + 1}")
+                    st.write(f"Product ID: {recommendation['product_id']}")
+                    st.write(f"Product Name: {recommendation['product_name']}")
+                    st.write(f"Category: {recommendation['category']}")
+                    st.write(f"Rating: {recommendation['rating']} ({recommendation['rating_count']})")
+                    st.image(recommendation['img_link'], use_column_width=True)
+                    st.write(f"Product Link: [Link]({recommendation['product_link']})")
+                    recommendation_index += 1
 
 if __name__ == '__main__':
     main()

@@ -17,13 +17,21 @@ def main():
 
     st.title('Filters')
     # Filter products by category
-    selected_category = st.selectbox('Select a category:', data['category'].unique())
+    selected_category = st.selectbox('Select a category:', sorted(data['category'].unique()))
     filtered_data = data[data['category'] == selected_category]
 
     st.title("Product Recommendations App")
 
     # Create an input field for the user to enter the product ID
+    
     product_id = st.number_input("Enter Product ID", min_value=0)
+
+    
+    # Add a dropdown for selecting a product by name
+    # selected_product_name = st.selectbox('Select a product:', sorted(filtered_data['product_name'].values))
+
+    # # Get the product ID for the selected product name
+    # product_id = filtered_data[filtered_data['product_name'] == selected_product_name]['product_id'].values[0]
 
     # Create a button to trigger the recommendations
     if st.button("Get Recommendations"):
@@ -31,7 +39,7 @@ def main():
         recommendations = get_recommendations_with_details(product_id=product_id)
 
         # Display recommendations in the Streamlit app
-        st.header("Recommendations")
+        st.header(f"Recommendations")
         num_columns = 3  # Number of columns in the grid layout
         num_recommendations = len(recommendations)
         num_rows = (num_recommendations - 1) // num_columns + 1

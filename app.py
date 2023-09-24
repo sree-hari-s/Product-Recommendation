@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-
+from main import get_recommendations_with_details
 # Load the CSV dataset
 @st.cache_data   # Caching for faster reloading
 def load_data():
@@ -18,7 +18,29 @@ def main():
     # Filter products by category
     selected_category = st.selectbox('Select a category:', data['category'].unique())
     filtered_data = data[data['category'] == selected_category]
-    product_filters(filtered_data)
+    #product_filters(filtered_data)
+    st.title("Product Recommendations App")
+
+    # Create an input field for the user to enter the product ID
+    product_id = st.number_input("Enter Product ID", min_value=0)
+
+    # Create a button to trigger the recommendations
+    if st.button("Get Recommendations"):
+        # Call the recommendation function with default parameter values
+        recommendations = get_recommendations_with_details(product_id=product_id)
+
+        # Display recommendations in the Streamlit app
+        st.header("Recommendations")
+        for i, rec in enumerate(recommendations, start=1):
+            st.subheader(f"Recommendation {i}")
+            st.write(f"Product ID: {rec['product_id']}")
+            st.write(f"Product Name: {rec['product_name']}")
+            st.write(f"Category: {rec['category']}")
+            st.write(f"Rating: {rec['rating']}")
+            st.write(f"Rating Count: {rec['rating_count']}")
+            st.write(f"Image Link: {rec['img_link']}")
+            st.write(f"Product Link: {rec['product_link']}")
+            st.write(f"Distance: {rec['distance']}")
 
 def product_filters(filtered_data):
     st.title('Products Display')

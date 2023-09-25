@@ -34,7 +34,20 @@ def main():
 
     # Get the product ID for the selected product name
     selected_product_id = filtered_data[filtered_data['product_name'] == selected_product_name]['product_id'].values[0]
-    product_id = product_id_encoder.fit_transform([selected_product_id])[0]
+    product_id_encoder.fit(data['product_id'])
+    product_id = product_id_encoder.transform([selected_product_id])[0]
+
+
+    selected_product_details = filtered_data[filtered_data['product_id'] == selected_product_id].iloc[0]
+    st.header("Selected Product Details")
+    st.write(f"Product ID: {selected_product_details['product_id']}")
+    st.write(f"Product Name: {selected_product_details['product_name']}")
+    st.write(f"Category: {selected_product_details['category']}")
+    st.write(f"Rating: {selected_product_details['rating']} ({selected_product_details['rating_count']})")
+    st.image(selected_product_details['img_link'], use_column_width=True)
+    st.write(f"Product Link: [Link]({selected_product_details['product_link']})")
+    
+    
     # Create a button to trigger the recommendations
     if st.button("Get Recommendations"):
         # Call the recommendation function with default parameter values

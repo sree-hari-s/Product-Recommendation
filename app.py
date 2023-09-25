@@ -1,7 +1,10 @@
 import streamlit as st
 import pandas as pd
 from main import get_recommendations_with_details
+from sklearn.preprocessing import LabelEncoder
+import pickle
 
+model = pickle.load(open('model.pkl', 'rb'))
 # Load the CSV dataset
 @st.cache_data    # Caching for faster reloading
 def load_data():
@@ -22,17 +25,16 @@ def main():
 
     st.title("Product Recommendations App")
 
-    # Create an input field for the user to enter the product ID
-    
-    product_id = st.number_input("Enter Product ID", min_value=0)
-
+    # Create an input field for the user to enter the product ID    
+    #product_id = st.number_input("Enter Product ID", min_value=0)
     
     # Add a dropdown for selecting a product by name
-    # selected_product_name = st.selectbox('Select a product:', sorted(filtered_data['product_name'].values))
+    product_id_encoder = LabelEncoder()
+    selected_product_name = st.selectbox('Select a product:', sorted(filtered_data['product_name'].values))
 
-    # # Get the product ID for the selected product name
-    # product_id = filtered_data[filtered_data['product_name'] == selected_product_name]['product_id'].values[0]
-
+    # Get the product ID for the selected product name
+    selected_product_id = filtered_data[filtered_data['product_name'] == selected_product_name]['product_id'].values[0]
+    product_id = product_id_encoder.fit_transform([selected_product_id])[0]
     # Create a button to trigger the recommendations
     if st.button("Get Recommendations"):
         # Call the recommendation function with default parameter values

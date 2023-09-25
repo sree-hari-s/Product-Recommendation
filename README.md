@@ -67,4 +67,11 @@ This guide will walk you through the process of setting up the E-commerce Recomm
 ### You can also contribute to this project
 
 - Check out the [`CONTRIBUTING.md`](CONTRIBUTING.md) file to get started
-  
+
+## Contact
+
+For any queries, feel free to open an issue or reach out to me at [sreeharis1999@gmail.com](mailto:sreeharis1999@gmail.com).
+
+## License
+
+This project is licensed under the terms of the [MIT License](LICENSE).

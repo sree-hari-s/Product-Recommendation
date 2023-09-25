@@ -9,7 +9,7 @@ import pickle
 PAGE_TITLE = "Ecommerce Demo"
 PAGE_ICON = ":wave:"
 st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
-
+# Load the model using pickle
 model = pickle.load(open('model.pkl', 'rb'))
 # Load the CSV dataset
 @st.cache_data    # Caching for faster reloading
@@ -45,7 +45,7 @@ def main():
 
     selected_product_details = filtered_data[filtered_data['product_id'] == selected_product_id].iloc[0]
 
-    # Use st.beta_columns to create two columns for details and image
+    # Use st.columns to create two columns for details and image
     details_col, image_col = st.columns(2)
 
     # Display product details in the left column
@@ -56,12 +56,12 @@ def main():
         st.write(f"Category: {selected_product_details['category']}")
         st.write(f"Rating: {selected_product_details['rating']} ({selected_product_details['rating_count']})")
 
-    # Display product image in the right column
+    # Display product image and link in the right column
     with image_col:
         st.image(selected_product_details['img_link'], use_column_width=True)
         st.write(f"Product Link: [Link]({selected_product_details['product_link']})")
     
-    # Create a button to trigger the recommendations
+    # button to trigger the recommendations
     if st.button("Get Recommendations"):
         # Call the recommendation function with default parameter values
         recommendations = get_recommendations_with_details(product_id=product_id)
